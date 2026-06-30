@@ -6,7 +6,7 @@ export default function AboutMe() {
   const socialLinks = [
     {
       name: 'Call / WhatsApp',
-      value: '7498516086',
+      value: '+91 7498516086',
       icon: <Phone className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />,
       href: 'https://wa.me/917498516086',
       color: 'hover:border-emerald-500/40 hover:bg-emerald-500/5 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]',

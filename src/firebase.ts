@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, Timestamp } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, Timestamp, onSnapshot } from "firebase/firestore";
 
 // Firebase Config from firebase-applet-config.json
 const firebaseConfig = {
@@ -16,4 +16,4 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firestore with the custom database ID provided in the config
 export const db = getFirestore(app, "ai-studio-virajventures-dd990b68-cd28-4118-88c5-7e6901c85f29");
 
-export { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, Timestamp };
+export { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, Timestamp, onSnapshot };

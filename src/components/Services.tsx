@@ -1,56 +1,158 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Monitor, Smartphone, Palette, Globe, Layers, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
+import { 
+  Monitor, 
+  Smartphone, 
+  Palette, 
+  Globe, 
+  Code, 
+  Server, 
+  CreditCard, 
+  PenTool, 
+  Sparkles, 
+  Package, 
+  Video, 
+  FileText, 
+  MapPin, 
+  TrendingUp, 
+  Share2, 
+  Megaphone, 
+  Target, 
+  ShieldCheck, 
+  Zap 
+} from 'lucide-react';
 
 export default function Services() {
-  const services = [
+  const categories = [
     {
-      title: 'Website Development',
-      subtitle: 'Business, Portfolio, E-commerce',
-      icon: <Monitor className="w-8 h-8 text-electric-blue" />,
-      description: 'Responsive, fast, and SEO-friendly websites. Built custom from scratch to match your unique brand identity.',
-      bullets: [
-        'Premium Landing Pages (SaaS & Startup)',
-        'E-commerce Store Fronts with payments',
-        'Custom Portfolios & Creator websites',
-        'CMS & Blog websites (WordPress / Custom)',
-      ],
-      tag: '🔥 Most Popular',
+      name: 'Software & Apps',
+      icon: <Code className="w-6 h-6 text-electric-blue" />,
       glowClass: 'glow-blue',
       topStripe: 'group-hover:via-electric-blue',
-      borderColor: 'group-hover:border-electric-blue/40'
+      borderColor: 'group-hover:border-electric-blue/40',
+      items: [
+        { 
+          title: 'Website Development', 
+          icon: <Globe className="w-5 h-5 text-electric-blue" />, 
+          desc: 'Custom, fast, SEO-friendly websites & landing pages built from scratch.' 
+        },
+        { 
+          title: 'App Development (Android/iOS)', 
+          icon: <Smartphone className="w-5 h-5 text-purple-400" />, 
+          desc: 'High-performance cross-platform mobile apps for Android & iOS.' 
+        },
+        { 
+          title: 'Custom Software Development', 
+          icon: <Monitor className="w-5 h-5 text-pink-400" />, 
+          desc: 'Bespoke web applications, dashboards, and automated business tools.' 
+        },
+      ]
     },
     {
-      title: 'Mobile App',
-      subtitle: 'Android + iOS',
-      icon: <Smartphone className="w-8 h-8 text-purple-400" />,
-      description: 'Stunning cross-platform mobile apps for Android and iOS using modern hybrid development stacks.',
-      bullets: [
-        'React Native / Flutter architectures',
-        'Offline-first and fast state databases',
-        'Push notifications & Real-time storage',
-        'Play Store & App Store deployments',
-      ],
-      tag: '⚡ Highly Requested',
-      glowClass: 'glow-purple',
-      topStripe: 'group-hover:via-purple-500',
-      borderColor: 'group-hover:border-purple-500/40'
+      name: 'Integration & Cloud',
+      icon: <Server className="w-6 h-6 text-emerald-400" />,
+      glowClass: 'glow-green',
+      topStripe: 'group-hover:via-emerald-500',
+      borderColor: 'group-hover:border-emerald-500/40',
+      items: [
+        { 
+          title: 'Domain & Hosting Setup', 
+          icon: <Server className="w-5 h-5 text-emerald-400" />, 
+          desc: 'Secure cloud hosting, domain configuration, and SSL setups.' 
+        },
+        { 
+          title: 'Payment Gateway Integration', 
+          icon: <CreditCard className="w-5 h-5 text-yellow-400" />, 
+          desc: 'Razorpay, Stripe, and custom checkout flows for smooth payments.' 
+        },
+        { 
+          title: 'Google Business Profile Setup', 
+          icon: <MapPin className="w-5 h-5 text-electric-blue" />, 
+          desc: 'Local business listing optimization to rank higher on Google Maps.' 
+        },
+      ]
     },
     {
-      title: 'UI/UX + Branding',
-      subtitle: 'Logo se full design',
-      icon: <Palette className="w-8 h-8 text-pink-400" />,
-      description: 'Elegant interfaces designed for extreme ease of use and aesthetic impact. Complete visual assets.',
-      bullets: [
-        'Modern Figma UX Wireframes',
-        'Sleek Logo and Brand Guidelines',
-        'Interactive Mockups & Prototypes',
-        'Custom Vector graphics & UI Assets',
-      ],
-      tag: '🎨 Clean Aesthetic',
+      name: 'UI/UX & Brand Design',
+      icon: <Palette className="w-6 h-6 text-pink-400" />,
       glowClass: 'glow-pink',
       topStripe: 'group-hover:via-pink-500',
-      borderColor: 'group-hover:border-pink-500/40'
+      borderColor: 'group-hover:border-pink-500/40',
+      items: [
+        { 
+          title: 'UI/UX Design', 
+          icon: <Palette className="w-5 h-5 text-pink-400" />, 
+          desc: 'Modern wireframes and high-fidelity interactive user interfaces.' 
+        },
+        { 
+          title: 'Logo Design', 
+          icon: <PenTool className="w-5 h-5 text-electric-blue" />, 
+          desc: 'Unique, memorable logo marks that define your brand essence.' 
+        },
+        { 
+          title: 'Brand Identity Design', 
+          icon: <Sparkles className="w-5 h-5 text-purple-400" />, 
+          desc: 'Cohesive fonts, color schemes, and visual design guidelines.' 
+        },
+      ]
+    },
+    {
+      name: 'Media & Print Assets',
+      icon: <Package className="w-6 h-6 text-yellow-400" />,
+      glowClass: 'glow-yellow',
+      topStripe: 'group-hover:via-yellow-500',
+      borderColor: 'group-hover:border-yellow-500/40',
+      items: [
+        { 
+          title: 'Video Editing', 
+          icon: <Video className="w-5 h-5 text-purple-400" />, 
+          desc: 'High-engaging Reels, YouTube videos, and brand ads.' 
+        },
+        { 
+          title: 'Content Creation', 
+          icon: <FileText className="w-5 h-5 text-pink-400" />, 
+          desc: 'Strategic copywriting, articles, and engaging visual posts.' 
+        },
+        { 
+          title: 'Business Card Design', 
+          icon: <CreditCard className="w-5 h-5 text-emerald-400" />, 
+          desc: 'Professional, print-ready corporate business cards.' 
+        },
+        { 
+          title: 'Packaging Design', 
+          icon: <Package className="w-5 h-5 text-yellow-400" />, 
+          desc: 'Aesthetic product box designs and custom labels.' 
+        },
+      ]
+    },
+    {
+      name: 'Marketing & SEO',
+      icon: <Megaphone className="w-6 h-6 text-purple-400" />,
+      glowClass: 'glow-purple',
+      topStripe: 'group-hover:via-purple-500',
+      borderColor: 'group-hover:border-purple-500/40',
+      items: [
+        { 
+          title: 'SEO (Search Engine Optimization)', 
+          icon: <TrendingUp className="w-5 h-5 text-electric-blue" />, 
+          desc: 'On-page and technical SEO to boost your organic web search ranking.' 
+        },
+        { 
+          title: 'Social Media Management', 
+          icon: <Share2 className="w-5 h-5 text-purple-400" />, 
+          desc: 'Growth strategies, scheduling, and community engagement.' 
+        },
+        { 
+          title: 'Meta Ads Management', 
+          icon: <Megaphone className="w-5 h-5 text-yellow-400" />, 
+          desc: 'High-converting Facebook and Instagram paid ad campaigns.' 
+        },
+        { 
+          title: 'Google Ads Management', 
+          icon: <Target className="w-5 h-5 text-pink-400" />, 
+          desc: 'Optimized search and display ads to generate qualified leads.' 
+        },
+      ]
     }
   ];
 
@@ -70,71 +172,76 @@ export default function Services() {
             What We Offer
           </span>
           <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-white mt-4">
-            Professional Tech Services
+            Professional Tech & Design Services
           </h2>
           <p className="text-sm text-slate-400 mt-3">
             Pure code, high performance, clean visual layouts — structured strictly for modern business growth.
           </p>
         </motion.div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+        {/* Categories Grid */}
+        <div className="flex flex-wrap justify-center gap-8">
+          {categories.map((category, catIndex) => (
             <motion.div
-              key={service.title}
+              key={category.name}
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.12 }}
+              transition={{ duration: 0.5, delay: catIndex * 0.08 }}
               whileHover={{ y: -6 }}
-              className={`bg-[#0b1329]/30 backdrop-blur-md border border-white/5 rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 relative group overflow-hidden cursor-default will-change-gpu glow-card ${service.glowClass} ${service.borderColor}`}
+              className={`w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-[380px] bg-[#0b1329]/30 backdrop-blur-md border border-white/5 rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 relative group overflow-hidden cursor-default will-change-gpu glow-card ${category.glowClass} ${category.borderColor}`}
             >
               {/* Card top stripe decoration */}
-              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent ${service.topStripe} transition-all duration-500`} />
+              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent ${category.topStripe} transition-all duration-500`} />
 
               <div>
-                <div className="flex justify-between items-start mb-6">
-                  <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-850 group-hover:scale-105 group-hover:rotate-6 transition-all duration-305">
-                    {service.icon}
+                {/* Category Header */}
+                <div className="flex items-center gap-3 pb-4 mb-6 border-b border-slate-900/60">
+                  <div className="p-3 rounded-2xl bg-slate-950 border border-slate-850 group-hover:scale-105 group-hover:rotate-6 transition-all duration-300">
+                    {category.icon}
                   </div>
-                  <span className="text-[10px] font-mono bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full text-slate-400 font-bold uppercase tracking-wider">
-                    {service.tag}
-                  </span>
+                  <h3 className="text-lg font-display font-extrabold text-white">
+                    {category.name}
+                  </h3>
                 </div>
 
-                <h3 className="text-xl font-display font-extrabold text-white group-hover:text-white transition-colors duration-300">
-                  {service.title}
-                </h3>
-                <p className="text-xs text-electric-blue font-bold tracking-wide mt-1 font-mono uppercase">
-                  {service.subtitle}
-                </p>
-
-                <p className="text-slate-450 text-xs leading-relaxed mt-4">
-                  {service.description}
-                </p>
-
-                {/* Bullets */}
-                <ul className="mt-6 space-y-2.5">
-                  {service.bullets.map((bullet, bulletIndex) => (
-                    <motion.li 
-                      key={bullet} 
+                {/* Items List */}
+                <div className="space-y-4">
+                  {category.items.map((item, itemIndex) => (
+                    <motion.div
+                      key={item.title}
                       initial={{ opacity: 0, x: -5 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: (index * 0.1) + (bulletIndex * 0.05) }}
-                      className="flex items-start gap-2.5 text-xs text-slate-350"
+                      transition={{ delay: (catIndex * 0.05) + (itemIndex * 0.03) }}
+                      className="p-3 bg-slate-950/50 hover:bg-slate-955 border border-slate-900/50 rounded-2xl flex items-start gap-3 transition-all duration-200 text-left"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-electric-blue shrink-0 mt-0.5 group-hover:scale-110 transition-all duration-350" />
-                      <span>{bullet}</span>
-                    </motion.li>
+                      <div className="p-2 bg-slate-900 border border-slate-850 rounded-xl shrink-0">
+                        {item.icon}
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-extrabold text-white group-hover:text-electric-blue transition-colors">
+                          {item.title}
+                        </h4>
+                        <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                          {item.desc}
+                        </p>
+                      </div>
+                    </motion.div>
                   ))}
-                </ul>
+                </div>
               </div>
 
-              {/* Footer inside card */}
-              <div className="mt-8 pt-6 border-t border-slate-900/60 flex items-center justify-between">
-                <span className="text-[9px] font-mono text-slate-500">SERVICE // 0{index + 1}</span>
-                <span className="text-xs font-semibold text-white group-hover:text-electric-blue flex items-center gap-1 transition-colors cursor-pointer">
+              {/* Footer */}
+              <div className="mt-8 pt-4 border-t border-slate-900/60 flex items-center justify-between">
+                <span className="text-[9px] font-mono text-slate-500">CATEGORY // 0{catIndex + 1}</span>
+                <span 
+                  onClick={() => {
+                    const element = document.getElementById('project-idea-form-section');
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-xs font-semibold text-white group-hover:text-electric-blue flex items-center gap-1 transition-colors cursor-pointer"
+                >
                   Submit Idea
                   <Zap className="w-3.5 h-3.5 text-electric-blue animate-bounce" />
                 </span>

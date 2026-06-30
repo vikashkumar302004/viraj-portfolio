@@ -120,7 +120,7 @@ export default function App() {
                 <li className="flex items-center gap-2">
                   <Phone className="w-3.5 h-3.5 text-slate-500" />
                   <a href="tel:7498516086" className="hover:text-electric-blue transition-colors">
-                    7498516086
+                    +91 7498516086
                   </a>
                 </li>
                 <li className="flex items-center gap-2">
@@ -147,7 +147,7 @@ export default function App() {
                 <MapPin className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-white">Karad, Maharashtra</p>
-                  <p className="text-[10px] text-slate-500 mt-1">Sunder Nagar, India</p>
+                  <p className="text-[10px] text-slate-500 mt-1">Julewadi, India</p>
                 </div>
               </div>
             </div>

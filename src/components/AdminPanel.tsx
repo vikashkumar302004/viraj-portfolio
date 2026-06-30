@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Lock, Eye, EyeOff, ShieldCheck, Database, Calendar, Smartphone, Mail, MessageSquare, Trash2, CheckCircle2, RefreshCw, LogOut, ChevronRight, User, Palette, IndianRupee, Clock, ArrowUpRight, Search, Check, Save } from 'lucide-react';
-import { db, collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from '../firebase';
+import { db, collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from '../firebase';
 import { Lead } from '../types';
 
 export default function AdminPanel() {
@@ -21,9 +21,32 @@ export default function AdminPanel() {
     const authSession = sessionStorage.getItem('viraj_auth');
     if (authSession === 'true') {
       setIsAuthenticated(true);
-      fetchLeads();
     }
   }, []);
+
+  // Setup real-time listener when authenticated
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    setIsLoading(true);
+    setError('');
+    const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const fetchedLeads: Lead[] = [];
+      querySnapshot.forEach((docSnap) => {
+        fetchedLeads.push({ id: docSnap.id, ...docSnap.data() } as Lead);
+      });
+      setLeads(fetchedLeads);
+      setIsLoading(false);
+    }, (err: any) => {
+      console.error('Error fetching leads:', err);
+      setError(`Database Error: ${err.message || 'Could not load leads'}. Check console/config.`);
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [isAuthenticated]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +55,6 @@ export default function AdminPanel() {
       setIsAuthenticated(true);
       sessionStorage.setItem('viraj_auth', 'true');
       setError('');
-      fetchLeads();
     } else {
       setError('Incorrect passcode! Please enter the correct passcode.');
     }
