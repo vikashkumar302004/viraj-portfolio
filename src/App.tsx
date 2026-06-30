@@ -10,6 +10,7 @@ import AdminPanel from './components/AdminPanel';
 import Faq from './components/Faq';
 import ParticleBackground from './components/ParticleBackground';
 import Chatbot from './components/Chatbot';
+import Testimonials from './components/Testimonials';
 
 export default function App() {
   const [isAdminMode, setIsAdminMode] = useState(false);
@@ -78,6 +79,9 @@ export default function App() {
 
               {/* Biography About Section */}
               <AboutMe />
+
+              {/* Client Testimonials Carousel */}
+              <Testimonials />
 
               {/* FAQ Section */}
               <Faq />
