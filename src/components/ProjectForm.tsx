@@ -63,31 +63,6 @@ export default function ProjectForm() {
     setErrorMessage('');
 
     try {
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.name.trim(),
-          whatsapp: formData.whatsapp.trim(),
-          email: formData.email.trim(),
-          projectType: formData.projectType,
-          description: formData.description.trim(),
-          brandColor: formData.brandColor,
-          referenceLink: formData.referenceLink.trim(),
-          budget: formData.budget,
-          deadline: formData.deadline
-        })
-      });
-
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || `HTTP error ${response.status}`);
-      }
-      
-      setIsSuccess(true);
-
       // Auto-redirect to Viraj's WhatsApp with prefilled project details!
       const projectLabels = {
         website: '💻 Website Development',
@@ -114,6 +89,8 @@ ${formData.description.trim()}`;
       
       // Open in a new tab
       window.open(whatsappUrl, '_blank');
+
+      setIsSuccess(true);
       
       // Reset form but keep brandColor for visual sanity
       setFormData({
@@ -129,7 +106,7 @@ ${formData.description.trim()}`;
       });
     } catch (err: any) {
       console.error('Error submitting idea:', err);
-      setErrorMessage(`Database Error: ${err.message || 'Connection failed'}. Please verify connection or contact on WhatsApp.`);
+      setErrorMessage(`Error: ${err.message || 'Submission failed'}. Please contact on WhatsApp.`);
     } finally {
       setIsLoading(false);
     }

@@ -25,37 +25,58 @@ export default function AdminPanel() {
     }
   }, []);
 
-  // Setup real-time polling listener when authenticated
+  // Setup real-time localStorage sync when authenticated
   useEffect(() => {
-    if (!isAuthenticated || !passcode) return;
-
-    const loadLeads = async () => {
-      try {
-        const response = await fetch('/api/leads', {
-          headers: {
-            'x-admin-passcode': passcode
-          }
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-        const data = await response.json();
-        setLeads(data);
-        setError('');
-      } catch (err: any) {
-        console.error('Error fetching leads:', err);
-        setError(`Database Error: ${err.message || 'Could not load leads'}. Check server connection.`);
-      }
-    };
+    if (!isAuthenticated) return;
 
     setIsLoading(true);
-    loadLeads().finally(() => setIsLoading(false));
-
-    // Poll every 4 seconds for real-time lead updates
-    const interval = setInterval(loadLeads, 4000);
-
-    return () => clearInterval(interval);
-  }, [isAuthenticated, passcode]);
+    setError('');
+    try {
+      const localLeads = localStorage.getItem('viraj_leads');
+      if (localLeads) {
+        setLeads(JSON.parse(localLeads));
+      } else {
+        // Prefill with gorgeous mock leads
+        const mocks = [
+          {
+            id: 'mock-1',
+            name: 'Rajesh Sharma',
+            whatsapp: '+91 98765 43210',
+            email: 'rajesh@startups.in',
+            projectType: 'website',
+            description: 'Need a premium high-converting landing page for our SaaS startup with modern dark mode and animations.',
+            brandColor: '#00f0ff',
+            budget: '₹15k - ₹35k',
+            deadline: '2-4 weeks',
+            status: 'completed',
+            createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+            adminNotes: 'Client was extremely happy! Custom design was built using React and Framer Motion.'
+          },
+          {
+            id: 'mock-2',
+            name: 'Priya Patel',
+            whatsapp: '+91 91234 56789',
+            email: 'priya@creators.co',
+            projectType: 'ui_ux_branding',
+            description: 'Looking for a clean visual branding guidelines and logo + premium Portfolio mockup design in Figma.',
+            brandColor: '#ec4899',
+            budget: '₹5k - ₹15k',
+            deadline: '1 week',
+            status: 'new',
+            createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+            adminNotes: 'Direct WhatsApp link sent. Awaiting wireframe confirmation.'
+          }
+        ];
+        setLeads(mocks as any);
+        localStorage.setItem('viraj_leads', JSON.stringify(mocks));
+      }
+    } catch (err: any) {
+      console.error('Error loading leads:', err);
+      setError('Failed to load leads from local storage.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,19 +102,13 @@ export default function AdminPanel() {
     setIsLoading(true);
     setError('');
     try {
-      const response = await fetch('/api/leads', {
-        headers: {
-          'x-admin-passcode': passcode
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
+      const localLeads = localStorage.getItem('viraj_leads');
+      if (localLeads) {
+        setLeads(JSON.parse(localLeads));
       }
-      const data = await response.json();
-      setLeads(data);
     } catch (err: any) {
       console.error('Error fetching leads:', err);
-      setError(`Database Error: ${err.message || 'Could not load leads'}. Check connection.`);
+      setError('Could not load leads.');
     } finally {
       setIsLoading(false);
     }
@@ -101,20 +116,9 @@ export default function AdminPanel() {
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     try {
-      const response = await fetch(`/api/leads/${leadId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-passcode': passcode
-        },
-        body: JSON.stringify({ status: newStatus })
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-      setLeads(prev =>
-        prev.map(lead => (lead.id === leadId ? { ...lead, status: newStatus as any } : lead))
-      );
+      const updated = leads.map(lead => (lead.id === leadId ? { ...lead, status: newStatus as any } : lead));
+      setLeads(updated);
+      localStorage.setItem('viraj_leads', JSON.stringify(updated));
     } catch (err: any) {
       console.error('Error updating status:', err);
       alert('Status update failed: ' + err.message);
@@ -123,20 +127,9 @@ export default function AdminPanel() {
 
   const handleSaveNotes = async (leadId: string) => {
     try {
-      const response = await fetch(`/api/leads/${leadId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-passcode': passcode
-        },
-        body: JSON.stringify({ adminNotes: tempNotes })
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-      setLeads(prev =>
-        prev.map(lead => (lead.id === leadId ? { ...lead, adminNotes: tempNotes } : lead))
-      );
+      const updated = leads.map(lead => (lead.id === leadId ? { ...lead, adminNotes: tempNotes } : lead));
+      setLeads(updated);
+      localStorage.setItem('viraj_leads', JSON.stringify(updated));
       setEditingNotesId(null);
     } catch (err: any) {
       console.error('Error saving notes:', err);
@@ -147,16 +140,9 @@ export default function AdminPanel() {
   const handleDeleteLead = async (leadId: string) => {
     if (!window.confirm('Are you sure you want to delete this lead?')) return;
     try {
-      const response = await fetch(`/api/leads/${leadId}`, {
-        method: 'DELETE',
-        headers: {
-          'x-admin-passcode': passcode
-        }
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-      setLeads(prev => prev.filter(lead => lead.id !== leadId));
+      const updated = leads.filter(lead => lead.id !== leadId);
+      setLeads(updated);
+      localStorage.setItem('viraj_leads', JSON.stringify(updated));
     } catch (err: any) {
       console.error('Error deleting lead:', err);
       alert('Lead deletion failed: ' + err.message);
