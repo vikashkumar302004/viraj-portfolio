@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, ArrowRight, CheckCircle, Smartphone, Globe, Palette, Mail, User, Shield, AlertCircle, Link, Calendar, MessageSquare, IndianRupee } from 'lucide-react';
-import { db, collection, addDoc, Timestamp } from '../firebase';
 import { ProjectType } from '../types';
 import InteractivePreview from './InteractivePreview';
 
@@ -64,19 +63,28 @@ export default function ProjectForm() {
     setErrorMessage('');
 
     try {
-      await addDoc(collection(db, 'leads'), {
-        name: formData.name.trim(),
-        whatsapp: formData.whatsapp.trim(),
-        email: formData.email.trim(),
-        projectType: formData.projectType,
-        description: formData.description.trim(),
-        brandColor: formData.brandColor,
-        referenceLink: formData.referenceLink.trim(),
-        budget: formData.budget,
-        deadline: formData.deadline,
-        status: 'new',
-        createdAt: Timestamp.now(),
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          whatsapp: formData.whatsapp.trim(),
+          email: formData.email.trim(),
+          projectType: formData.projectType,
+          description: formData.description.trim(),
+          brandColor: formData.brandColor,
+          referenceLink: formData.referenceLink.trim(),
+          budget: formData.budget,
+          deadline: formData.deadline
+        })
       });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || `HTTP error ${response.status}`);
+      }
       
       setIsSuccess(true);
       // Reset form but keep brandColor for visual sanity

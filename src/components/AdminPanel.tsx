@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Lock, Eye, EyeOff, ShieldCheck, Database, Calendar, Smartphone, Mail, MessageSquare, Trash2, CheckCircle2, RefreshCw, LogOut, ChevronRight, User, Palette, IndianRupee, Clock, ArrowUpRight, Search, Check, Save } from 'lucide-react';
-import { db, collection, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from '../firebase';
 import { Lead } from '../types';
 
 export default function AdminPanel() {
@@ -19,34 +18,44 @@ export default function AdminPanel() {
   // Save authentication state in sessionStorage so they don't have to log in on page refresh within the same session
   useEffect(() => {
     const authSession = sessionStorage.getItem('viraj_auth');
-    if (authSession === 'true') {
+    const authPasscode = sessionStorage.getItem('viraj_passcode');
+    if (authSession === 'true' && authPasscode) {
       setIsAuthenticated(true);
+      setPasscode(authPasscode);
     }
   }, []);
 
-  // Setup real-time listener when authenticated
+  // Setup real-time polling listener when authenticated
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !passcode) return;
+
+    const loadLeads = async () => {
+      try {
+        const response = await fetch('/api/leads', {
+          headers: {
+            'x-admin-passcode': passcode
+          }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        const data = await response.json();
+        setLeads(data);
+        setError('');
+      } catch (err: any) {
+        console.error('Error fetching leads:', err);
+        setError(`Database Error: ${err.message || 'Could not load leads'}. Check server connection.`);
+      }
+    };
 
     setIsLoading(true);
-    setError('');
-    const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const fetchedLeads: Lead[] = [];
-      querySnapshot.forEach((docSnap) => {
-        fetchedLeads.push({ id: docSnap.id, ...docSnap.data() } as Lead);
-      });
-      setLeads(fetchedLeads);
-      setIsLoading(false);
-    }, (err: any) => {
-      console.error('Error fetching leads:', err);
-      setError(`Database Error: ${err.message || 'Could not load leads'}. Check console/config.`);
-      setIsLoading(false);
-    });
+    loadLeads().finally(() => setIsLoading(false));
 
-    return () => unsubscribe();
-  }, [isAuthenticated]);
+    // Poll every 4 seconds for real-time lead updates
+    const interval = setInterval(loadLeads, 4000);
+
+    return () => clearInterval(interval);
+  }, [isAuthenticated, passcode]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +63,7 @@ export default function AdminPanel() {
     if (passcode === 'viraj17' || passcode === '7498' || passcode === '2009') {
       setIsAuthenticated(true);
       sessionStorage.setItem('viraj_auth', 'true');
+      sessionStorage.setItem('viraj_passcode', passcode);
       setError('');
     } else {
       setError('Incorrect passcode! Please enter the correct passcode.');
@@ -63,6 +73,7 @@ export default function AdminPanel() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('viraj_auth');
+    sessionStorage.removeItem('viraj_passcode');
     setPasscode('');
   };
 
@@ -70,16 +81,19 @@ export default function AdminPanel() {
     setIsLoading(true);
     setError('');
     try {
-      const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
-      const querySnapshot = await getDocs(q);
-      const fetchedLeads: Lead[] = [];
-      querySnapshot.forEach((docSnap) => {
-        fetchedLeads.push({ id: docSnap.id, ...docSnap.data() } as Lead);
+      const response = await fetch('/api/leads', {
+        headers: {
+          'x-admin-passcode': passcode
+        }
       });
-      setLeads(fetchedLeads);
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+      const data = await response.json();
+      setLeads(data);
     } catch (err: any) {
       console.error('Error fetching leads:', err);
-      setError(`Database Error: ${err.message || 'Could not load leads'}. Check console/config.`);
+      setError(`Database Error: ${err.message || 'Could not load leads'}. Check connection.`);
     } finally {
       setIsLoading(false);
     }
@@ -87,8 +101,17 @@ export default function AdminPanel() {
 
   const handleStatusChange = async (leadId: string, newStatus: string) => {
     try {
-      const leadDocRef = doc(db, 'leads', leadId);
-      await updateDoc(leadDocRef, { status: newStatus });
+      const response = await fetch(`/api/leads/${leadId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-passcode': passcode
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
       setLeads(prev =>
         prev.map(lead => (lead.id === leadId ? { ...lead, status: newStatus as any } : lead))
       );
@@ -100,8 +123,17 @@ export default function AdminPanel() {
 
   const handleSaveNotes = async (leadId: string) => {
     try {
-      const leadDocRef = doc(db, 'leads', leadId);
-      await updateDoc(leadDocRef, { adminNotes: tempNotes });
+      const response = await fetch(`/api/leads/${leadId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-passcode': passcode
+        },
+        body: JSON.stringify({ adminNotes: tempNotes })
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
       setLeads(prev =>
         prev.map(lead => (lead.id === leadId ? { ...lead, adminNotes: tempNotes } : lead))
       );
@@ -115,7 +147,15 @@ export default function AdminPanel() {
   const handleDeleteLead = async (leadId: string) => {
     if (!window.confirm('Are you sure you want to delete this lead?')) return;
     try {
-      await deleteDoc(doc(db, 'leads', leadId));
+      const response = await fetch(`/api/leads/${leadId}`, {
+        method: 'DELETE',
+        headers: {
+          'x-admin-passcode': passcode
+        }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
       setLeads(prev => prev.filter(lead => lead.id !== leadId));
     } catch (err: any) {
       console.error('Error deleting lead:', err);
