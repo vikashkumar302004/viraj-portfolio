@@ -87,6 +87,34 @@ export default function ProjectForm() {
       }
       
       setIsSuccess(true);
+
+      // Auto-redirect to Viraj's WhatsApp with prefilled project details!
+      const projectLabels = {
+        website: '💻 Website Development',
+        mobile_app: '📱 Mobile App (Android/iOS)',
+        ui_ux_branding: '🎨 UI/UX Design + Branding',
+        custom: '⚙️ Custom Idea'
+      };
+      
+      const pTypeLabel = projectLabels[formData.projectType] || formData.projectType;
+
+      const messageText = `Hi Viraj! I have submitted a project request on your website. Here are the details:
+- *Name:* ${formData.name.trim()}
+- *WhatsApp:* ${formData.whatsapp.trim()}
+- *Email:* ${formData.email.trim() || 'N/A'}
+- *Project Type:* ${pTypeLabel}
+- *Budget:* ${formData.budget}
+- *Deadline:* ${formData.deadline}
+- *Brand Color:* ${formData.brandColor}
+
+*Project Idea:*
+${formData.description.trim()}`;
+
+      const whatsappUrl = `https://wa.me/917498516086?text=${encodeURIComponent(messageText)}`;
+      
+      // Open in a new tab
+      window.open(whatsappUrl, '_blank');
+      
       // Reset form but keep brandColor for visual sanity
       setFormData({
         name: '',
